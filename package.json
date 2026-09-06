@@ -1,0 +1,39 @@
+{
+  "name": "ai-newsbot",
+  "version": "1.0.0",
+  "description": "Real-Time AI-Powered News Aggregator & Conversational Assistant (React + TS + Node)",
+  "main": "server/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"cyan,magenta\" \"node --watch server/index.js\" \"npm --prefix client run dev\"",
+    "dev:server": "node --watch server/index.js",
+    "dev:client": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "start": "node server/index.js"
+  },
+  "keywords": [
+    "news",
+    "ai",
+    "llm",
+    "gemini",
+    "react",
+    "typescript",
+    "vite",
+    "newsbot",
+    "rss",
+    "realtime"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "rss-parser": "^3.13.0",
+    "sanitize-html": "^2.14.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
