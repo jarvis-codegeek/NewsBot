@@ -35,8 +35,8 @@ app.get('/api/health', (req, res) => {
 });
 
 // Determine static assets folder (prefer compiled React build in dist/)
-const distPath = path.join(__dirname, '../dist');
-const publicPath = path.join(__dirname, '../public');
+const distPath = path.join(currentDirPath, '../dist');
+const publicPath = path.join(currentDirPath, '../public');
 const staticPath = fs.existsSync(distPath) ? distPath : publicPath;
 
 app.use(express.static(staticPath));
