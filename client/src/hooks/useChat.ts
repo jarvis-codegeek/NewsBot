@@ -7,7 +7,7 @@ export function useChat() {
       id: 'welcome',
       role: 'model',
       content:
-        "Hello! I am **NewsBot AI**. I have real-time access to today's breaking stories across technology, AI, business, world politics, and science.\n\nAsk me anything or click one of the suggested prompts below!",
+        "Welcome to **The Daily Chronicle Intelligence Desk**. I have real-time access to today's syndicated world news, tech developments, financial markets, and science.\n\nAsk me anything about today's headlines or select an inquiry below!",
       timestamp: Date.now(),
     },
   ]);
