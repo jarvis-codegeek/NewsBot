@@ -3,9 +3,9 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.join(__dirname, '../../.env') });
+const currentFilePath = typeof __filename !== 'undefined' ? __filename : fileURLToPath(import.meta.url);
+const currentDirPath = typeof __dirname !== 'undefined' ? __dirname : path.dirname(currentFilePath);
+dotenv.config({ path: path.join(currentDirPath, '../../.env') });
 
 let geminiClient = null;
 

@@ -7,10 +7,10 @@ import { fileURLToPath } from 'url';
 import newsRoutes from './routes/news.js';
 import aiRoutes from './routes/ai.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const currentFilePath = typeof __filename !== 'undefined' ? __filename : fileURLToPath(import.meta.url);
+const currentDirPath = typeof __dirname !== 'undefined' ? __dirname : path.dirname(currentFilePath);
 
-dotenv.config({ path: path.join(__dirname, '../.env') });
+dotenv.config({ path: path.join(currentDirPath, '../.env') });
 
 const app = express();
 const PORT = process.env.PORT || 3000;

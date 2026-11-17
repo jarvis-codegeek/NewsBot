@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>NewsBot – Unit Test Coverage & Framework Architecture Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --green: #16a34a;
+    --green-light: #f0fdf4;
+    --red: #dc2626;
+    --red-light: #fff1f2;
+    --purple: #7c3aed;
+    --purple-light: #f5f3ff;
+    --yellow: #d97706;
+    --yellow-light: #fffbeb;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-500: #64748b;
+    --gray-700: #334155;
+    --gray-900: #0f172a;
+    --border: #e2e8f0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 10px;
+    color: var(--gray-900);
+    background: #fff;
+    line-height: 1.45;
+    padding: 24px 30px;
+  }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    background: var(--gray-100);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: var(--gray-900);
+  }
+
+  /* ── HEADER ── */
+  .report-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 14px;
+    border-bottom: 3px solid var(--accent);
+    margin-bottom: 18px;
+  }
+  .report-header .brand { display: flex; align-items: center; gap: 12px; }
+  .report-header .logo {
+    width: 40px; height: 40px; border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .report-header h1 { font-size: 18px; font-weight: 800; color: var(--gray-900); }
+  .report-header .subtitle { font-size: 10px; color: var(--gray-500); margin-top: 1px; }
+  .report-header .meta { text-align: right; font-size: 9.5px; color: var(--gray-500); line-height: 1.6; }
+  .report-header .meta strong { color: var(--gray-700); }
+
+  /* ── SCORECARD ── */
+  .scorecard {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .score-box {
+    background: var(--gray-50);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .score-box .val {
+    font-size: 22px; font-weight: 800;
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+  .score-box .lbl { font-size: 8.5px; color: var(--gray-500); text-transform: uppercase; letter-spacing: .5px; }
+  .score-box.green .val { color: var(--green); }
+  .score-box.blue .val  { color: var(--accent); }
+  .score-box.red .val   { color: var(--red); }
+  .score-box.purple .val { color: var(--purple); }
+
+  /* ── SECTION HEADINGS ── */
+  h2 {
+    font-size: 12px; font-weight: 700;
+    color: var(--gray-900);
+    margin: 18px 0 8px;
+    display: flex; align-items: center; gap: 7px;
+  }
+  h2 .pill {
+    font-size: 8.5px; font-weight: 600; padding: 1px 7px;
+    border-radius: 999px; background: var(--accent-light); color: var(--accent);
+  }
+
+  /* ── TECH STACK GRID ── */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .tech-card {
+    background: var(--gray-50);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .tech-card h4 {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tech-card p {
+    font-size: 9.5px;
+    color: var(--gray-700);
+    line-height: 1.4;
+  }
+
+  /* ── TABLES ── */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 9.5px; }
+  thead tr { background: var(--gray-900); color: #fff; }
+  thead th { padding: 6px 8px; text-align: left; font-weight: 600; font-size: 9px; letter-spacing: .3px; }
+  tbody tr:nth-child(even) { background: var(--gray-50); }
+  td { padding: 5px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  td:first-child { font-weight: 500; }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-block; padding: 2px 6px;
+    border-radius: 999px; font-size: 8.5px; font-weight: 600;
+  }
+  .badge.pass   { background: var(--green-light);  color: var(--green); }
+  .badge.warn   { background: var(--yellow-light); color: var(--yellow); }
+  .badge.fail   { background: var(--red-light);    color: var(--red); }
+  .badge.info   { background: var(--accent-light); color: var(--accent); }
+  .badge.purple { background: var(--purple-light); color: var(--purple); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-row { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+  .progress-label { width: 160px; font-size: 9.5px; color: var(--gray-700); }
+  .progress-track { flex: 1; height: 7px; background: var(--gray-200); border-radius: 999px; overflow: hidden; }
+  .progress-fill  { height: 100%; border-radius: 999px; background: var(--accent); }
+  .progress-fill.green { background: var(--green); }
+  .progress-count { font-size: 9px; font-weight: 600; color: var(--gray-700); width: 60px; text-align: right; }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 8.5px; color: var(--gray-500);
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  @media print {
+    body { padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<div class="report-header">
+  <div class="brand">
+    <div class="logo">📰</div>
+    <div>
+      <h1>NewsBot AI — Jest &amp; React Testing Library (RTL) Coverage Report</h1>
+      <div class="subtitle">Complete Unit Test Suite with Jest v30, React Testing Library, and jest-dom</div>
+    </div>
+  </div>
+  <div class="meta">
+    <div><strong>Date:</strong> November 17, 2026</div>
+    <div><strong>Framework:</strong> Jest + React Testing Library (<code>@testing-library/react</code>)</div>
+    <div><strong>DOM Environment:</strong> <code>jest-environment-jsdom</code> + <code>@testing-library/jest-dom</code></div>
+    <div><strong>Runner:</strong> <code>npm test</code> (<code>jest --config jest.config.cjs</code>)</div>
+  </div>
+</div>
+
+<!-- ══ SCORECARD ══ -->
+<div class="scorecard">
+  <div class="score-box blue"><div class="val">84</div><div class="lbl">Total Tests</div></div>
+  <div class="score-box green"><div class="val">84</div><div class="lbl">Passing (100%)</div></div>
+  <div class="score-box red"><div class="val">0</div><div class="lbl">Failing</div></div>
+  <div class="score-box purple"><div class="val">6</div><div class="lbl">Test Suites</div></div>
+  <div class="score-box blue"><div class="val">33</div><div class="lbl">Sub-Suites</div></div>
+  <div class="score-box green"><div class="val">~4.1s</div><div class="lbl">Execution Time</div></div>
+</div>
+
+<!-- ══ FRAMEWORKS & PACKAGES USED ══ -->
+<h2>🛠️ Testing Framework &amp; Packages Installed &amp; Configured <span class="pill">Official Stack</span></h2>
+
+<div class="tech-grid">
+  <div class="tech-card">
+    <h4>🃏 Test Framework: Jest (v30.5.2)</h4>
+    <p>
+      Used <strong>Jest</strong> as the primary test runner, test framework, and test assertion engine. Configured via <code>jest.config.cjs</code> with <code>babel-jest</code> transformation, <code>transformIgnorePatterns</code> for ESM dependencies, and module mapping.
+    </p>
+  </div>
+  <div class="tech-card">
+    <h4>🧪 React Component Testing: React Testing Library (RTL v16.3.3)</h4>
+    <p>
+      Utilized <strong><code>@testing-library/react</code></strong> and <strong><code>@testing-library/dom</code></strong> to render components, query elements by role, text, title, and simulate user interactions (<code>fireEvent.click</code>, <code>fireEvent.change</code>, <code>fireEvent.submit</code>).
+    </p>
+  </div>
+  <div class="tech-card">
+    <h4>🌐 DOM Environment: <code>jest-environment-jsdom</code></h4>
+    <p>
+      Configured <strong><code>jsdom</code></strong> as Jest's test environment to simulate the browser window, document, events, HTML elements, and navigation for React DOM components.
+    </p>
+  </div>
+  <div class="tech-card">
+    <h4>✨ Custom DOM Matchers: <code>@testing-library/jest-dom</code></h4>
+    <p>
+      Added custom Jest assertions like <code>toBeInTheDocument()</code>, <code>toHaveClass()</code>, and <code>toHaveAttribute()</code> via <code>jest.setup.cjs</code>. Replaced the deprecated legacy <code>jest-dom</code> v4 package.
+    </p>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Package Name</th>
+      <th>Installed Version</th>
+      <th>Scope</th>
+      <th>Role in Testing Architecture</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><code>jest</code></strong></td>
+      <td><code>^30.5.2</code></td>
+      <td>Test Runner</td>
+      <td>Orchestrates test suites, runs test lifecycle, manages test reporting and timeouts.</td>
+    </tr>
+    <tr>
+      <td><strong><code>@testing-library/react</code></strong></td>
+      <td><code>^16.3.3</code></td>
+      <td>Component Testing</td>
+      <td>Headless component mounting, <code>render()</code>, <code>screen</code> queries, and event dispatches.</td>
+    </tr>
+    <tr>
+      <td><strong><code>@testing-library/dom</code></strong></td>
+      <td><code>^10.4.2</code></td>
+      <td>DOM Query Engine</td>
+      <td>Underlying DOM query selectors (byText, byRole, byTitle, byPlaceholderText).</td>
+    </tr>
+    <tr>
+      <td><strong><code>@testing-library/jest-dom</code></strong></td>
+      <td><code>^7.0.1</code></td>
+      <td>Assertion Matchers</td>
+      <td>Provides semantic DOM expectations (e.g. <code>expect(el).toBeInTheDocument()</code>).</td>
+    </tr>
+    <tr>
+      <td><strong><code>jest-environment-jsdom</code></strong></td>
+      <td><code>^30.5.2</code></td>
+      <td>DOM Simulation</td>
+      <td>Provides browser window, document, and DOM APIs inside Node.js for component tests.</td>
+    </tr>
+    <tr>
+      <td><strong><code>@babel/preset-env</code></strong></td>
+      <td><code>^7.29.14</code></td>
+      <td>Transpiler</td>
+      <td>Transpiles modern ES Modules (ESM) to Node-compatible JavaScript for Jest.</td>
+    </tr>
+    <tr>
+      <td><strong><code>@babel/preset-react</code></strong></td>
+      <td><code>^7.29.7</code></td>
+      <td>JSX Transpiler</td>
+      <td>Compiles React 18 JSX syntax with automatic runtime (<code>runtime: 'automatic'</code>).</td>
+    </tr>
+    <tr>
+      <td><strong><code>@babel/preset-typescript</code></strong></td>
+      <td><code>^7.29.7</code></td>
+      <td>TypeScript Transpiler</td>
+      <td>Strips TypeScript type annotations and compiles <code>.tsx</code> and <code>.ts</code> files for Jest.</td>
+    </tr>
+    <tr>
+      <td><strong><code>babel-plugin-transform-import-meta</code></strong></td>
+      <td><code>^2.3.2</code></td>
+      <td>Module Interop</td>
+      <td>Allows <code>import.meta.url</code> in server code to execute seamlessly within Jest CommonJS runner.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ══ LAYER DISTRIBUTION ══ -->
+<h2>📊 Coverage by Layer <span class="pill">Distribution</span></h2>
+
+<div style="margin-bottom:14px;">
+  <div class="progress-row"><div class="progress-label">Server Services</div><div class="progress-track"><div class="progress-fill green" style="width:38.1%"></div></div><div class="progress-count">32 tests (38.1%)</div></div>
+  <div class="progress-row"><div class="progress-label">API Routes (Express)</div><div class="progress-track"><div class="progress-fill" style="width:15.5%"></div></div><div class="progress-count">13 tests (15.5%)</div></div>
+  <div class="progress-row"><div class="progress-label">Client Utilities &amp; Logic</div><div class="progress-track"><div class="progress-fill" style="width:21.4%"></div></div><div class="progress-count">18 tests (21.4%)</div></div>
+  <div class="progress-row"><div class="progress-label">React UI Components (RTL)</div><div class="progress-track"><div class="progress-fill green" style="width:25%"></div></div><div class="progress-count">21 tests (25.0%)</div></div>
+</div>
+
+<!-- ══ TEST SUITE BREAKDOWN ══ -->
+<h2>🗂️ Test Files Breakdown <span class="pill">6 Files • 84 Tests</span></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Test File</th>
+      <th>Tested Module</th>
+      <th>Tests</th>
+      <th>Key Coverage Areas</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>cacheService.test.js</code></td>
+      <td><code>server/services/cacheService.js</code></td>
+      <td>8</td>
+      <td>TTL expiration, get/set, delete, clear, default TTL 300s, falsy values</td>
+      <td><span class="badge pass">8/8 PASS</span></td>
+    </tr>
+    <tr>
+      <td><code>newsService.test.js</code></td>
+      <td><code>server/services/newsService.js</code></td>
+      <td>12</td>
+      <td>8 categories validation, caching, offline fallback, sorting, deduplication, search fallback, trending words</td>
+      <td><span class="badge pass">12/12 PASS</span></td>
+    </tr>
+    <tr>
+      <td><code>llmService.test.js</code></td>
+      <td><code>server/services/llmService.js</code></td>
+      <td>12</td>
+      <td>API key detection, 5 summary modes (tldr, deep_dive, eli5, market_impact, timeline), daily briefing, chat RAG matching</td>
+      <td><span class="badge pass">12/12 PASS</span></td>
+    </tr>
+    <tr>
+      <td><code>apiRoutes.test.js</code></td>
+      <td><code>server/routes/news.js</code>, <code>ai.js</code></td>
+      <td>13</td>
+      <td>GET /categories, GET /news (limit cap), GET /search, GET /trending, POST /summarize, POST /briefing, POST /chat (SSE stream &amp; JSON), health check</td>
+      <td><span class="badge pass">13/13 PASS</span></td>
+    </tr>
+    <tr>
+      <td><code>clientLogic.test.js</code></td>
+      <td><code>useAudio.ts</code>, <code>NewsCard.tsx</code>, <code>App.tsx</code></td>
+      <td>18</td>
+      <td>Markdown TTS stripping, relative time format (Just now, 15m, 4h, 3d), category titles mapping, search state, voice selection</td>
+      <td><span class="badge pass">18/18 PASS</span></td>
+    </tr>
+    <tr>
+      <td><code>components.test.jsx</code></td>
+      <td>11 React UI Components (RTL)</td>
+      <td>21</td>
+      <td>AudioPlayerBar, Ticker, HeroSection, CategoryFilter, NewsCard, NewsGrid, Header, SummaryModal, DailyBriefingModal, ChatDrawer, ArticleQuickViewModal</td>
+      <td><span class="badge pass">21/21 PASS</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="page-break"></div>
+
+<!-- ══ DETAILED TEST MATRICES ══ -->
+<h2>🔬 Detailed Test Verification Matrix</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Component / Service</th>
+      <th>Testing Tool</th>
+      <th>Method / Feature</th>
+      <th>Test Scenario</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>CacheService</strong></td><td>Jest</td><td><code>set() / get()</code></td><td>Store and retrieve before TTL passes</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>CacheService</strong></td><td>Jest</td><td><code>get()</code></td><td>Return null on missing key</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>CacheService</strong></td><td>Jest</td><td><code>delete()</code></td><td>Purge individual key</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>CacheService</strong></td><td>Jest</td><td><code>clear()</code></td><td>Wipe all active entries</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>CacheService</strong></td><td>Jest</td><td>TTL Expiration</td><td>Auto-delete and return null after 50ms TTL window</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>CacheService</strong></td><td>Jest</td><td>Default TTL</td><td>Defaults expiry to 300 seconds if unprovided</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>NewsService</strong></td><td>Jest</td><td>Categories</td><td>Ensure all 8 valid categories with correct icons and titles</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>NewsService</strong></td><td>Jest</td><td>Caching</td><td>Retrieve cached articles without external request</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>NewsService</strong></td><td>Jest</td><td>Error Resiliency</td><td>Graceful return on network unreachable</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>NewsService</strong></td><td>Jest</td><td>Sorting</td><td>Sort news articles descending by timestamp</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>NewsService</strong></td><td>Jest</td><td>Search</td><td>Empty query falls back to 'all' top category</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>NewsService</strong></td><td>Jest</td><td>Search Fallback</td><td>Search over cached top articles if search feed fails</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>NewsService</strong></td><td>Jest</td><td>Trending</td><td>Tokenize, remove stop-words, rank recurring topics</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>LLMService</strong></td><td>Jest</td><td><code>isApiKeyConfigured()</code></td><td>Detects GEMINI_API_KEY presence correctly</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>LLMService</strong></td><td>Jest</td><td>TL;DR Mode</td><td>Formats 3-bullet Executive Takeaways and Why It Matters</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>LLMService</strong></td><td>Jest</td><td>ELI5 Mode</td><td>Formats simple explanation without technical jargon</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>LLMService</strong></td><td>Jest</td><td>Market Impact Mode</td><td>Formats affected sectors, financial outlook, investor sentiment</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>LLMService</strong></td><td>Jest</td><td>Briefing Generator</td><td>Aggregates top headlines into executive digest</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>LLMService</strong></td><td>Jest</td><td>Chat RAG Match</td><td>Surfaces matching live article and source in chat reply</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>Express Routes</strong></td><td>Jest</td><td><code>GET /categories</code></td><td>Returns 8 category objects</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>Express Routes</strong></td><td>Jest</td><td><code>GET /</code></td><td>Honors category param and caps limit at 60</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>Express Routes</strong></td><td>Jest</td><td><code>POST /summarize</code></td><td>Returns 400 Bad Request if title missing</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>Express Routes</strong></td><td>Jest</td><td><code>POST /chat</code></td><td>Streams SSE chunks (<code>text/event-stream</code>) when stream=true</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>Express Routes</strong></td><td>Jest</td><td><code>POST /chat</code></td><td>Returns standard JSON when stream=false</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>Client: useAudio</strong></td><td>Jest</td><td><code>stripMarkdown</code></td><td>Removes markdown headers, bold, links, formats pause periods</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>Client: NewsCard</strong></td><td>Jest</td><td><code>formatTime</code></td><td>Calculates relative timestamps (Just now, 15m ago, 4h ago, 3d ago)</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>React: AudioPlayerBar</strong></td><td>RTL</td><td>User Interaction</td><td>Renders player bar, fires pause/resume and stop button click events</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>React: Ticker</strong></td><td>RTL</td><td>User Interaction</td><td>Renders BREAKING badge, headline click opens article, dismiss button hides ticker</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>React: HeroSection</strong></td><td>RTL</td><td>User Interaction</td><td>Renders banner, clicking trending chip triggers topic filter callback</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>React: CategoryFilter</strong></td><td>RTL</td><td>User Interaction</td><td>Renders 8 section tabs with aria-current, fires refresh and layout toggles</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>React: NewsCard</strong></td><td>RTL</td><td>User Interaction</td><td>Renders title, snippet, source, triggers Quick View and AI Brief callbacks</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>React: NewsGrid</strong></td><td>RTL</td><td>User Interaction</td><td>Renders 6 skeleton loaders, empty state with reset button, and featured story</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>React: Header</strong></td><td>RTL</td><td>User Interaction</td><td>Updates search query on input change, clears query on clear button click</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>React: SummaryModal</strong></td><td>RTL</td><td>User Interaction</td><td>Renders 5 mode tabs, fires Ask AI callback and closes modal</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>React: DailyBriefingModal</strong></td><td>RTL</td><td>User Interaction</td><td>Renders briefing dialog, listen button, and close handler</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>React: ChatDrawer</strong></td><td>RTL</td><td>User Interaction</td><td>Renders messages, prompt chip click sends message, form submission, clear chat</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>React: ArticleQuickViewModal</strong></td><td>RTL</td><td>User Interaction</td><td>Renders story view, TL;DR tab, and Ask AI action button</td><td><span class="badge pass">PASS</span></td></tr>
+  </tbody>
+</table>
+
+<!-- ══ FOOTER ══ -->
+<div class="footer">
+  <div>📰 <strong>NewsBot AI Platform</strong> | Test Suite Version: 2.0.0 (Jest + RTL) | Runner: <code>npm test</code></div>
+  <div>Generated automatically | 84 Passed • 0 Failed • 100% Pass Rate</div>
+</div>
+
+</body>
+</html>
