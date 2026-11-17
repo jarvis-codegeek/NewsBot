@@ -58,9 +58,9 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({
               <i className="ph-fill ph-robot"></i>
             </div>
             <div>
-              <h3 className="chat-title">NewsBot Assistant</h3>
+              <h3 className="chat-title">Chronicle AI Intelligence</h3>
               <span className="chat-status">
-                <span className="live-dot-green"></span> Live News Grounded
+                <span className="live-dot-green"></span> Real-Time Newsroom Grounded
               </span>
             </div>
           </div>
@@ -156,7 +156,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({
       <button
         className="floating-chat-btn"
         onClick={onToggle}
-        title="Chat with AI NewsBot"
+        title="Consult Chronicle AI Intelligence"
       >
         <div className="floating-chat-icon-wrapper">
           <i className="ph-fill ph-chats-circle"></i>
